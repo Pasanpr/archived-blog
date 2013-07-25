@@ -1,0 +1,8 @@
+active_modules: [pygments, tags, blog, latex, disqus]
+author: Pasan Premaratne
+canonical_url: http://www.pasanpremaratne.com
+modules:
+  pygments:
+    style: tango
+  disqus:
+    shortname: pasanpremaratne

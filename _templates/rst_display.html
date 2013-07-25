@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block title %}{{ rst.title }}{% endblock %}
+{% block body %}
+  {%- if not config.hide_title %}
+  {%- endif %}
+<section role="main" class="container">
+  <article>
+    <header>
+      {% if ctx.pub_date %}
+      <p class="meta" id="time">
+        <time datetime="">
+          {{ format_date(ctx.pub_date, format='full') }}
+      </time>
+      </p>
+      {% endif %}
+      <h1>{{ rst.title }}</h1>
+    </header>
+    <section class="content">
+      {{ rst.fragment }}
+    </section>
+    <footer role="contentinfo" class="post-foot">
+  <section class="post-foot-top">
+    {% if ctx.tags %}
+    <p class="meta" id="tags">
+      {% for tag in ctx.tags|sort(case_sensitive=true) %}
+      {%- if not loop.first and not loop.last %}, {% endif -%}
+      {%- if loop.last and not loop.first %} and {% endif %}
+      <a href="{{ link_to('tag', tag=tag) }}">{{ tag }}</a>
+    {%- endfor %}
+    </p>
+    {% endif %}
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="pasanpr" data-size="large">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </section>
+</footer>
+  </article>
+</section>
+
+  {% if 'disqus' in config.active_modules %}
+    {{ get_disqus() }}
+  {% endif %}
+{% endblock %}
+

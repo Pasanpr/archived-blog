@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %}Blog Archive for {{ entry.month_name}}, {{ entry.year }}{% endblock %}
+{% block body %}
+
+  <section role="main" class="container">
+    <section class="archive">
+      <h1 class="archive-title">
+        {{ entry.month_name }},<a href="{{ link_to('blog_archive', year=entry.year) }}"> {{ entry.year }}</a>
+      </h1>
+      {%- for entry in entry.entries %}
+      <article>
+      	<header>
+          <p class="meta" id="time">
+            <time>
+              {{ format_date(entry.pub_date, format='long') }}
+          </time>
+          </p>
+          <h2>
+            <a href="{{ link_to('page', slug=entry.slug) }}">{{ entry.title }}</a>
+          </h2>
+        </header>
+        <section class="content">
+          <p class="intro">{{ entry.summary }}</p>
+        </section>
+      </article>
+      {% endfor %}
+    </section>
+  </section>
+{% endblock %}

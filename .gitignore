@@ -1,0 +1,6 @@
+_build
+*.pyc
+*.swp
+*.aux
+*.eps
+*.log

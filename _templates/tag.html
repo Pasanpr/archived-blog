@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block title %}Entries tagged “{{ tag.name }}”{% endblock %}
+{% block body %}
+
+  <section role="main" class="container">
+  	<section class="archive">
+  		<h1 class="archive-title">{{ tag.name }}</h1>
+	  	{%- for entry in entries %}
+	  	<article>
+	  		<header>
+	  			<p class="meta">{{ format_date(entry.pub_date, format='long') }}</p>
+	  			<h2>
+	  				<a href="{{ link_to('page', slug=entry.slug) }}">{{ entry.title }}</a>
+	  			</h2>
+	  		</header>
+	  		<section class="content">
+	  			<p class="intro">{{ entry.summary }}</p>
+	  		</section>
+	  	</article>
+			{% endfor %}
+  	</section>
+  </section>
+{% endblock %}

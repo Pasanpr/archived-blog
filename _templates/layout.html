@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset=utf-8>
+
+  {% block htmlhead %}
+    <title>{% block title %}Home{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css" type="text/css">
+    <link href="/feed.atom" rel="alternate" title="Recent Blog Posts" type="application/atom+xml">
+    {%- for link in links %}
+    <link rel="{{ link.rel }}" href="{{ link.href }}"{%
+      if link.media %} media="{{ link.media }}"{% endif %} type="{{ link.type }}">
+    {%- endfor %}
+  {% endblock %}
+    <script type="text/javascript" src="//use.typekit.net/tcx7ena.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+  </head>
+  <body>
+    <header role="banner">
+      <div class="container">
+        <a href="/">Pasan Premaratne</a>
+        <ul class="headlinks">
+            <li><a href="/archive/">Archive</a></li>
+            <li><a href="/tags/">Tags</a></li>
+            <li><a href="/talks/">Talks</a></li>
+            <li><a href="/about/">About</a></li>
+        </ul>
+      </div>
+    </header>
+    <section role="main" class="container">
+      {% block body %}{% endblock %}
+    </section>
+    <footer id="footer">
+       <section class="container">
+        <p>&copy; Copyright {{ format_date(format='YYYY') }} by <a href="http://twitter.com/pasanpr">Pasan Premaratne</a>.
+          Get in <a href="mailto:hello@pasanpremaratne.com">touch</a>.
+        (<a href="/feed.atom" rel="alternate" title="Recent Blog Posts">feed</a>)
+       </section>
+    </footer>
+    <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-28086501-1']);
+  _gaq.push(['_setDomainName', 'pasanpremaratne.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

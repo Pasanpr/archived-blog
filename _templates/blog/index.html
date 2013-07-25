@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block title %}Pasan Premaratne{% endblock %}
+{% block body %}
+
+  {%- for entry in pagination.get_slice() %}
+  <article>
+    <header>
+      <p class="meta">
+        <time datetime="{{ format_date(entry.pub_date, format="short") }}">{{ format_date(entry.pub_date, format='long') }}</time>
+      </p>
+      <h2>
+        <a href="{{ link_to('page', slug=entry.slug) }}">{{ entry.title }}</a>
+      </h2>
+    </header>
+    {% if entry.summary %}
+    <section class="content">
+      <p class="intro">{{ entry.render_summary() }}</p>
+    </section>
+    {% endif %}
+  </article>
+  {%- endfor %} 
+
+  {% if show_pagination and pagination.pages > 1 %}
+    {{ pagination }}
+  {% endif %} 
+{% endblock %}
