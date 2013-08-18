@@ -6,9 +6,9 @@
   	<ul class="tags">
   		{%- for tag in get_tags(limit=50) %}
   	    <li class="tag">
-  	    	<h2 class="tag-title">
+  	    	<h3 class="tag-title">
   	    		<a href="{{ link_to('tag', tag=tag.name) }}">{{ tag.name }}</a>
-  	    	</h2>
+  	    	</h3>
   	    	<p class="meta tag-size">{{ tag.count }} {{ 'Post' if tag.count == 1 else 'Posts' }}</p>
   	    </li>
   	    {%- endfor %}

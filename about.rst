@@ -13,5 +13,4 @@ I currently work at `Treehouse <http://teamtreehouse.com>`_ as a Business Teache
 Some of my other projects are:
 
 - `Missing Links <http://www.missinglinks.io>`_ - A weekly entrepreneurial newsletter
-- `Failure Stories <http://www.failurestori.es>`_ - An inspirational blog documenting the countless entrepreneurial failures that eventually ended in success
   
