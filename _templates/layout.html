@@ -18,11 +18,9 @@
   <body>
     <header role="banner">
       <div class="container">
-        <a href="/">Pasan Premaratne</a>
+        <a class="header-title" href="/">Pasan Premaratne</a>
         <ul class="headlinks">
             <li><a href="/archive/">Archive</a></li>
-            <li><a href="/tags/">Tags</a></li>
-            <li><a href="/talks/">Talks</a></li>
             <li><a href="/about/">About</a></li>
         </ul>
       </div>
@@ -32,9 +30,11 @@
     </section>
     <footer id="footer">
        <section class="container">
-        <p>&copy; Copyright {{ format_date(format='YYYY') }} by <a href="http://twitter.com/pasanpr">Pasan Premaratne</a>.
-          Get in <a href="mailto:hello@pasanpremaratne.com">touch</a>.
-        (<a href="/feed.atom" rel="alternate" title="Recent Blog Posts">feed</a>)
+        <p>
+          <a href="https://twitter.com/pasanpr" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @pasanpr</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+        </p>
+        <p>&copy; {{ format_date(format='YYYY') }} Pasan Premaratne</p>
        </section>
     </footer>
     <script type="text/javascript">

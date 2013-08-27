@@ -3,8 +3,8 @@
 {% block body %}
 
   <section role="main" class="container">
-  	<section class="archive">
-  		<h1 class="archive-title">{{ tag.name }}</h1>
+  	<section class="tag">
+  		<h1 class="tag-title">{{ tag.name }}</h1>
 	  	{%- for entry in entries %}
 	  	<article>
 	  		<header>
@@ -13,9 +13,6 @@
 	  				<a href="{{ link_to('page', slug=entry.slug) }}">{{ entry.title }}</a>
 	  			</h2>
 	  		</header>
-	  		<section class="content">
-	  			<p class="intro">{{ entry.summary }}</p>
-	  		</section>
 	  	</article>
 			{% endfor %}
   	</section>

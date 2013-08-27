@@ -5,18 +5,18 @@
   {%- for entry in pagination.get_slice() %}
   <article>
     <header>
+      <h2>
+        <a class="post-title" href="{{ link_to('page', slug=entry.slug) }}">{{ entry.title }}</a>
+      </h2>
       <p class="meta">
         <time datetime="{{ format_date(entry.pub_date, format="short") }}">{{ format_date(entry.pub_date, format='long') }}</time>
       </p>
-      <h2>
-        <a href="{{ link_to('page', slug=entry.slug) }}">{{ entry.title }}</a>
-      </h2>
     </header>
-    {% if entry.summary %}
+    <!--{% if entry.summary %}
     <section class="content">
       <p class="intro">{{ entry.render_summary() }}</p>
     </section>
-    {% endif %}
+    {% endif %}-->
   </article>
   {%- endfor %} 
 
