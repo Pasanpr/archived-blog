@@ -3,7 +3,8 @@ from fabric.api import local, env
 from fabric.contrib.project import rsync_project
 
 env.hosts = ['s158570.gridserver.com']
-env.path = '/domains/pasanpremaratne.com/html/'
+env.user = 'notfromconcentrate.net'
+env.path = '/domains/pasanpremaratne.com/html'
 
 def push():
     local('git push')

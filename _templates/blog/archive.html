@@ -11,7 +11,7 @@
       <article>
         {%- for post in subentry.entries %}
           <h3>
-            <a href="{{ link_to('page', slug=entry.slug) }}">{{ post.title }}</a>
+            <a href="{{ link_to('page', slug=post.slug) }}">{{ post.title }}</a>
           </h3>
           {% endfor %}
       </article>
