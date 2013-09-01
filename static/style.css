@@ -348,10 +348,14 @@ article .content blockquote{
     border-left: 2px solid #2979FC;
 }
 
+article .content img {
+  margin:25px 0;
+}
+
 .highlight {
   background-color: #eeeeee;
   padding:10px;
-
+  margin: 15px 0;
   overflow: auto;
 }
 
@@ -386,6 +390,9 @@ article .content .footnotes hr{
 article .content .footnotes hr::after{
   content: none;
 }
+
+.figure { margin: 25px 0;}
+.caption { font-size: 0.8em; color:#8b8b8b; text-align: center; }
 /* Disqus
  *************************************/
 #disqus_thread{
