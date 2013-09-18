@@ -105,7 +105,7 @@ This pairing for strong and weak helps avoid what is known as a strong reference
 
 In this example, we have a ViewController, the parent, and its child, a TableViewController. If the relationship between the two were both strong, then neither one could be deallocated because it is always owned by the other. To solve this problem, we substitute one of the strong references for a weak reference. This weak reference does not imply ownership and therefore doesn't keep the object alive. 
 
-.. image:: /static/images/Reference_Cycle_2.png
+.. image:: /static/images/reference_cycle_2.png
    :align: center
    :alt: No strong reference cycle
 

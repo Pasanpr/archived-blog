@@ -20,7 +20,7 @@ body{
 }
 a{
   cursor: pointer;
-  color: #f6291d;
+  color: #c7254e;
   text-decoration: none;
   transition: all .25s;
 }
@@ -183,7 +183,7 @@ section.archive h3 a { color:#2979FC; }
 
 h1.archive-title{
   text-align: center;
-  color: #f6291d;
+  color: #c7254e;
   text-shadow: 0 1px rgba(255,255,255,.4);
   border-bottom: none;
   opacity: .5;
@@ -230,7 +230,7 @@ section.tag article {}
 
 h1.tag-title{
   text-align: center;
-  color: #f6291d;
+  color: #c7254e;
   text-shadow: 0 1px rgba(255,255,255,.4);
   border-bottom: none;
   opacity: .5;
@@ -357,11 +357,15 @@ article .content img {
   padding:10px;
   margin: 15px 0;
   overflow: auto;
+  border: 1px solid #cccccc;
 }
 
 .literal {
-  background-color: #eeeeee;
-  padding:2px;
+  padding: 2px 4px;
+  color: #c7254e;
+  background-color: #f9f2f4;
+  white-space: nowrap;
+  border-radius: 4px;
 }
 
 /*
