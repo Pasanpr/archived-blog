@@ -1,134 +1,147 @@
 public: yes
 tags: [ios, memory, concept]
-summary: |
-    Basic memory management and the difference between strong and weak property attributes
+summary: 
 
-=========================================
-iOS Memory Management I - Strong vs Weak
-=========================================
+===========================================================
+iOS Memory Management: The Manual-Retain-Release Model
+===========================================================
 
-Although I'm quite behind the curve in terms of jumping into iOS development, this seems to be as good a time as ever. iOS 7 changes things up quite a bit and it feels like the playing field is leveling for new entrants like me, even if only by a tiny bit. Also, I'm learning a lot more now than I did a few years ago, and I feel like it's mostly thanks to Automatic Reference Counting, or ARC. When I tried my hand at learning iOS development a few years ago, having no prior programming experience whatsoever, I found it really hard to wrap my mind around memory management and eventually gave up. This time around, not having to worry about retaining, releasing, and deallocating objects made it easier to understand the fundamentals. But once I got the basics down, I started to wonder what ARC was doing in the background. Why am I  assigning an object a property of strong? What's the difference between atomic and nonatomic? This series of posts is an attempt to understand these concepts better, starting with strong versus weak.
+**Edit:** This post was rewritten to be a bit more clear and was originally posted on the `Treehouse Blog <http://blog.teamtreehouse.com/ios-memory-management-part-1>`__. 
 
-Before ARC
--------------
+_____________________________________________________________________________________________________________________________________
 
-In order for me to understand why I was assigning a strong attribute to a property and what that meant, I had to look at how things were done before ARC was introduced. Pre-ARC, everyone followed a 'manual-retain-release', or MRR, model of memory management. The basic rules are as follows:
+Being a Business teacher at Treehouse, where our mission is to teach people to code, it’s lame to be someone who doesn’t know how to actually code. About a year ago, I decided it was about time and set about to teach myself. I wanted to use Treehouse videos to do this because not only was it a great resource I already had, but I also got to test our curriculum and provide feedback to the relevant teachers if I found any holes. I picked iOS development because I’m pretty much an Apple fanboy and because I’ve always wanted to make apps. In this first post, I’m going to outline some of the stuff I’ve learned so far. Be gentle, the training wheels are still on. :)
+
+When I tried my hand at learning iOS development a few years ago, having no prior programming experience whatsoever, one of my biggest mental blocks was in regards to iOS memory management. Retaining, releasing and deallocating objects made no sense to me and I soon gave up.
+
+Since then ARC, or Automatic Reference Counting, has been introduced and has made the job much easier. But learning with ARC has been somewhat of a black box. Why am I assigning an object a property of strong? What’s the difference between atomic and nonatomic? Before we go into what ARC is and how it made learning easier, let’s understand why we need it in the first place.
+
+Memory Management
+---------------------
+
+Devices have a limited amount of memory and in order for apps to function efficiently, we need to distribute ownership of this limited memory among our app data and code. The concept of memory management is “the process of allocating memory during your program’s runtime, using it, and freeing it when you are done with it”. There are two ways you can accomplish this:
+
+- The Manual-Retain-Release method, where you explicitly manage memory by keeping track of the objects you own using a method called reference counting
+- Using ARC, or Automatic Reference Counting, which still uses reference counting, but does it automatically by inserting the appropriate memory management method calls at compile-time
+
+In this post, the first of several posts, we are going to take a look at the Manual-Retain-Release model and how memory used to be managed so that we have an understanding of what ARC is doing in the background.
+
+Manual-Retain-Release
+------------------------
+
+Before the introduction of ARC, everyone followed a ‘manual-retain-release’, or MRR, model of memory management. The basic rules are as follows:
 
 - You own any object you create
 - You can take ownership of an object using retain
-- When you no longer need it, you must relinquish ownership of an object you own
+- When you no longer need it, you must relinquish ownership of an object you own.
 - You must not relinquish ownership of an object you do not own
 
-Under these rules, if an object is created (using a method whose name beings with "alloc", "new", "copy", or "mutableCopy"), it must be relinquished when it is no longer needed. To do this you send the object a ``release`` or ``autorelease`` message. Let's look at an example:
+Under these rules, if an object is created (using a method whose name beings with ``alloc``, ``new``, ``copy``, or ``mutableCopy``), it must be relinquished when it is no longer needed. To do this you send the object a release or autorelease message. Let’s look at an example:
 
-.. sourcecode:: Objective-C
+.. sourcecode:: objective-c
 
     {
-        Car *aCar = [[Car alloc] init];
-        // ...
-        NSString *model = aCar.model;
-        // ...
-        [aCar release]
+       Car *aCar = [[Car alloc] init];
+       // ...
+       NSString *model = aCar.model;
+       // ...
+       [aCar release]
     }
 
-We create the Car object using the ``alloc`` method, so to relinquish ownership once we're done with it, we send it a ``release`` message. We don't take ownership of the string pointing to the Car model, so we don't bother with sending it a release message.
 
-Object Properties
-------------------
+Once we’re done with the Car object, we relinquish ownership by sending a release or autorelease message. As such, relinquishing ownership of an object is typically referred to as *releasing* the object. In our example, we don’t take ownership of the string pointing to the Car model, so we don’t bother with sending it a release message.
 
-If any of your classes have properties that are objects, you have to make sure that any object that is set as the value is not deallocated when using it. To prevent this, you have to take ownership of the object when it is set, and relinquish ownership of any currently held values of said object. Easier explained in code. Here, we're assigning an attribute of retain to the property.
+Let’s look at another example of a method.
 
-.. sourcecode:: Objective-C
+.. sourcecode:: objective-c
 
-    @interface Car: NSObject
+    - (NSString *)model
+      {
+        NSString *string = [[[NSString alloc] initWithFormat:@"%@ %@", self.carMaker, self.modelName] autorelease];
+        return string;
+      }
 
-    @property (nonatomic, retain) NSString *model;
+Since we use the ``alloc`` method to create the object, according to Rule #1, we own the string returned by alloc. It is our responsibility now, to relinquish ownership of this object before we lose reference to it. In this case, if were to relinquish it using ``release``, the string will be deallocated before it is returned and the method would return an invalid object.
 
-    @end;
+Finally, you can relinquish ownership of your objects by implementing the ``dealloc`` method. The NSObject class defines a dealloc method that is implemented automatically when an object has no owners. From the docs: “The role of the dealloc method is to free the object’s own memory, and to dispose of any resources it holds, including ownership of any object instance variables.”
 
-To understand what ``retain`` does as an attribute, let's look at the property's getter and setter methods.
+In the following example, we create the instance variables ``carMaker`` and ``modelName``. To dispose of them when we are done and free up memory, we release them in our dealloc method.
 
-.. sourcecode:: Objective-C
+.. sourcecode:: objective-c
+
+    @interface Car : NSObject
+
+    @property (retain) NSString *carMaker;
+    @property (retain) NSString *modelName;
+
+    @end
+
+    @implementation Person
+    // ...
+    - (void)dealloc
+      {
+        [_carMaker release];
+        [_modelName release];
+        [super dealloc];
+      }
+    @end
+
+
+Using MRR techniques
+----------------------
+
+If any of your classes have properties that are objects, you have to make sure that when an object is set its value it is not deallocated while in use. To do this you have to claim ownership of the object and relinquish or release it when you are done with it. Take the following code:
+
+.. sourcecode:: objective-c
+
+    @property (nonatomic, retain) NSString *string;
+
+Properties declare two accessor methods – the setter and getter. This is done automatically for you, but let’s look under the hood so we can understand what’s going on.
+
+In the ‘get’ accessor or getter, all we’re doing is returning the synthesized instance variable. We don’t create a new object using ``alloc``, ``new``, ``copy``, or ``mutableCopy`` so we don’t have to retain or release it.
+
+.. sourcecode:: objective-c
 
     - (NSString *)string {
-        return _string;
+      return _string;
     }
 
-    - (void)setString:(NSString *)newString{
-        [newString retain];
-        [_string release];
-        _string = newString;
+In the ‘set’ method or setter, the value we assign could be disposed of at any time, so we have to take ownership of the object to make sure this won’t happen.
+
+.. sourcecode:: objective-c
+
+    - (void)setString:(NSString *)newString 
+    {
+      [newString retain];
+      [_string release];
+      // Make the new assignment.
+      _string = newString;
     }
 
-In the getter method, we're just returning the instance variable, so there's no need to retain or release. In the setter method, since we want the new string to persist after the method call, we have to take ownership of the object by sending it a retain message. Simultaneously, we relinquish ownership of the old string by sending it the release message. 
+We take ownership of the newString object using retain, relinquish ownership of the old string using release and then make the new assignment.
 
-Now, to further complicate things, objects can have many owners. As objects get passed around, you can have multiple references to the same object. To keep track of all this, you take care to *reference count* (or retain count) - using the retain method. This is how it works:
+We can use these accessor methods and our MRR rules to make sure we manage our memory properly. A final example:
+
+.. sourcecode:: objective-c
+
+    - (void)change 
+    {
+      NSString *anotherString = [[NSString alloc] initWithString:@"some string"];
+      [self setString:anotherString];
+      [anotherString release];
+    }
+
+We create anotherString with alloc so we balance it at the end with release. We also use our setter accessor method to set the value of our string property. Within our setter methods we take ownership of any relevant objects and release it when we don’t need, making sure we manage our memory effectively.
+
+Ownership Policy
+------------------
+Using retain and release to manage our memory uses a model called reference counting. Each object has a retain count and this is used to keep track of ownership.
 
 - When you create an object, it has a retain count of 1.
 - When you send an object a retain message, its retain count is incremented by 1.
 - When you send an object a release message, its retain count is decremented by 1.
-- Once an object's retain count is reduced to zero, it is deallocated.
+- When you send an object a autorelease message, its retain count is decremented by 1 at the end of the current autorelease pool block.
 
-As long as your retains and releases are balanced, you'll be fine. 
+Once an object’s retain count is reduced to zero, it is deallocated.
 
-Why do we do all this? For the sake of proper memory management. Incorrect memory usage can result in two types of problems:
-
-- Freeing or overwriting data that is still in use. This can corrupt your memory, crash your application and even corrupt your data.
-- Memory leaks. A memory leak occurs when memory is not freed up even though it is no longer in use. An application that has memory leaks uses ever increasing amounts of memory, which can result in slow performance and the app being terminated.
-
-Strong
--------
-Automatic reference counting, or ARC, introduced in iOS 5, takes care of all of this for you. So instead of having to remember to use retain, release and autorelease, ARC evaluates the lifetime of your objects and inserts the appropriate memory management calls for you. To do this, ARC introduced ``strong`` and ``weak`` as new declared property attributes. Strong is a synonym for retain, so the following declarations are identical:
-
-.. sourcecode:: Objective-C
-
-    @property (retain) Person *aPerson;
-    @property (strong) Person *aPerson;
-
-Under ARC, strong is the default for all types unless explicitly specified otherwise. In a strong relationship, like with retain, one object assumes ownership of another and it can share this ownership with yet another object. If in ``FirstViewController.m``, I had the following property:
-
-.. sourcecode:: Objective-C
-
-    @property (nonatomic, strong) NSMutableArray *items;
-
-I can pass this items array to a ``SecondViewController`` which assumes shared ownership of the object. Retaining and releasing are done in the background by ARC.
-
-Weak
------
-In contrast to strong, we have weak references. In a strong relationship, an object cannot be deallocated until all of its references are released. With weak references, the source object does not retain the object to which it has a reference, i.e., it is a non-owning relationship. Under the MRR model, this was achieved by assigning a property attribute of ``assign``. For the most part, ``assign`` and ``weak`` achieve the same objective, except that on releasing, weak sets the pointer to ``nil`` whereas assign does not. This prevents the app from crashing.
-
-This pairing for strong and weak helps avoid what is known as a strong reference cycle (previously called retain cycle). Let's look at the following illustration to understand what that means.
-
-.. image:: /static/images/reference_cycle_1.png
-   :align: center
-   :alt: Strong reference cycle
-
-In this example, we have a ViewController, the parent, and its child, a TableViewController. If the relationship between the two were both strong, then neither one could be deallocated because it is always owned by the other. To solve this problem, we substitute one of the strong references for a weak reference. This weak reference does not imply ownership and therefore doesn't keep the object alive. 
-
-.. image:: /static/images/reference_cycle_2.png
-   :align: center
-   :alt: No strong reference cycle
-
-As illustrated above, this is how a parent-delegate pattern works as well. The parent view has a weak relationship to its delegate:
-
-.. sourcecode:: Objective-C
-
-    UITableView
-    @property (weak) id delegate;
-
-While the delegate object has a strong one
-
-.. sourcecode:: Objective-C
-
-    Delegate object
-    @property (strong) UITableView *tableView;
-
-.. figure:: /static/images/relationships.png
-   :align: center
-   :alt: Strong and weak relationships in a delegate pattern
-
-   Diagram from `Apple Docs <https://developer.apple.com/library/ios/documentation/cocoa/conceptual/ProgrammingWithObjectiveC/EncapsulatingData/EncapsulatingData.html>`_
-
-This means that once the delegate object is deallocated, it releases the strong reference on ``NSTableView``. 
-
-That should cover the basics of memory management using strong and weak property attributes. Next, I'm going to try and tackle atomic and nonatomic.
+That should wrap up the basics of memory management using the manual-retain-release model. An understanding of this forms the foundation for building upon ARC, which we’ll tackle in our next post in the series.

@@ -4,10 +4,10 @@ from fabric.contrib.project import rsync_project
 
 env.hosts = ['s158570.gridserver.com']
 env.user = 'notfromconcentrate.net'
-env.path = '/domains/pasanpremaratne.com/html'
+env.path = 'domains/pasanpremaratne.com/html/'
 
 def push():
-    local('git push')
+    local('git push origin master')
 
 def serve():
     local('run-rstblog serve')
