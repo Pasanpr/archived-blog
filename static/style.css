@@ -353,11 +353,12 @@ article .content img {
 }
 
 .highlight {
-  background-color: #eeeeee;
+  background-color: #edeff0;
   padding:10px;
   margin: 15px 0;
   overflow: auto;
-  border: 1px solid #cccccc;
+
+  border-left: 3px solid #2979FC;
 }
 
 .literal {
